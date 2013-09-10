@@ -1,25 +1,46 @@
 var BaseController = require("./Base"),
 	View = require("../views/Base"),
-	model = new (require("../models/ContentModel"));
+	model = new (require("../models/ContentModel")),
+	_ = require('underscore');
 
 module.exports = BaseController.extend({ 
 	content: null,
-	run: function(type, req, res, next) {
+	run: function(query, req, res, next) {
 		model.setDB(req.db);
+		var menuMarkup = _.reduce(global.config.types, function(memo, type) {
+        	if (type.name === 'home') {
+        		return memo + '<li><a href="/">'+ type.title +'</a></li>';
+        	}
+        	return memo + '<li><a href="/'+ (type.plural || type.name) +'">'+ type.title +'</a></li>';
+        }, '');
+        
 		var self = this;
-		this.getContent(type, function() {
-			var v = new View(res, 'inner');
-			v.render(self.content);
+		self.getContent(query, function(innerMarkup) {
+			res.render('inner', {
+				inner: innerMarkup
+			}, function(err, bodyMarkup) {
+				var v = new View(res, 'main');
+				v.render({
+					menu: menuMarkup,
+					body: bodyMarkup
+				});
+			});
 		});
 	},
-	getContent: function(type, callback) {
+	getContent: function(query, callback) {
 		var self = this;
-		this.content = {}
+		var article = '';
 		model.getlist(function(err, records) {
 			if(records.length > 0) {
-				self.content = records[0];
+				article = '\
+					<section>\
+	                    <img src="'+ records[0].picture +'" alt="" />\
+	                    <h1>'+ records[0].title +'</h1>\
+	                    <p>'+ records[0].text +'</p>\
+	                </section>\
+                ';
 			}
-			callback();
-		}, { type: type });
+			callback(article);
+		}, query);
 	}
 });

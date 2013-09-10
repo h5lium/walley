@@ -1,4 +1,6 @@
 
+var _ = require('underscore');
+
 var config = {
 	local: {
 		mode: 'local',
@@ -18,5 +20,7 @@ var config = {
 }
 
 module.exports = function(mode) {
-	return config[mode || process.argv[2] || 'local'];
+	return _.extend(config[mode || process.argv[2] || 'local'], {
+		types: require('./types.conf.js')
+	});
 }

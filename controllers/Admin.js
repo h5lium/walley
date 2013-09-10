@@ -5,11 +5,10 @@ var BaseController = require("./Base"),
 	fs = require("fs"),
 	_ = require('underscore');
 
-module.exports = function(adminInfo) {
-	return _.extend(Admin, adminInfo);
-}
-
-var Admin = BaseController.extend({
+module.exports = BaseController.extend({
+	username: global.config.admin.username,
+	password: global.config.admin.password,
+	contentTypes: global.config.types,
 	run: function(req, res, next) {
 		var self = this;
 		if(this.authorize(req)) {
@@ -76,6 +75,11 @@ var Admin = BaseController.extend({
 		})
 	},
 	form: function(req, res, callback) {
+		var self = this;
+		var typeTags = _.reduce(this.contentTypes, function(memo, type) {
+			return memo + '<option value="'+ type.name +'">'+ type.title +'</option>';
+		}, '');
+		
 		var returnTheForm = function() {
 			if(req.query && req.query.action === "edit" && req.query.id) {
 				model.getlist(function(err, records) {
@@ -85,20 +89,25 @@ var Admin = BaseController.extend({
 							ID: record.ID,
 							text: record.text,
 							title: record.title,
-							type: '<option value="' + record.type + '">' + record.type + '</option>',
+							type: record.type,
+							typeTags: typeTags,
 							picture: record.picture,
 							pictureTag: record.picture != '' ? '<img class="list-picture" src="' + record.picture + '" />' : ''
 						}, function(err, html) {
 							callback(html);
 						});
 					} else {
-						res.render('admin-record', {}, function(err, html) {
+						res.render('admin-record', {
+							typeTags: typeTags
+						}, function(err, html) {
 							callback(html);
 						});
 					}
 				}, {ID: req.query.id});
 			} else {
-				res.render('admin-record', {}, function(err, html) {
+				res.render('admin-record', {
+					typeTags: typeTags
+				}, function(err, html) {
 					callback(html);
 				});
 			}
