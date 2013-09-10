@@ -1,0 +1,8 @@
+/.project
+/.idea
+/*.zip
+/*.txt
+/npm-debug.log
+/config/private
+/public/uploads/
+/node_modules/
