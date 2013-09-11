@@ -36,9 +36,9 @@ module.exports = BaseController.extend({
 					var record = records[i];
 					blogArticles += '\
 						<section class="item">\
-                            <img src="' + record.picture + '" alt="" />\
-                            <h2>' + record.title + '</h2>\
-                            <p>' + record.text + '</p>\
+                            <img src="' + self.safeAttr(record.picture) + '" alt="" />\
+                            <h2>' + self.safeText(record.title) + '</h2>\
+                            <p>' + self.safeText(record.text) + '</p>\
                             <br class="clear" />\
 							<hr />\
                         </section>\

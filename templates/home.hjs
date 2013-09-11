@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="blog-articles">
+    <div class="tweet-articles">
         <div class="content">
             {{{tweetArticles}}}
         </div>

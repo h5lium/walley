@@ -110,29 +110,29 @@ nav .menu li a:hover {
 .home .teaser .home-teaser-icons a:hover {
   opacity: 0.5;
 }
-.home .blog-articles {
+.home .tweet-articles {
   margin: 30px 0 0 0;
 }
-.home .blog-articles .item {
+.home .tweet-articles .item {
   width: 202px;
   float: left;
   margin: 0 50px 0 0;
 }
-.home .blog-articles .item img {
+.home .tweet-articles .item img {
   max-width: 201px;
   display: block;
 }
-.home .blog-articles .item a {
+.home .tweet-articles .item span {
   display: block;
   margin: 10px 0 0 0;
   color: #0b4c6e;
   font-size: 20px;
   text-decoration: none;
 }
-.home .blog-articles .item a:hover {
+.home .tweet-articles .item span:hover {
   color: #148ccb;
 }
-.home .blog-articles .item:last-child {
+.home .tweet-articles .item:last-child {
   margin: 0;
 }
 .inner h1 {

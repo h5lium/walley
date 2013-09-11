@@ -34,9 +34,9 @@ module.exports = BaseController.extend({
 			if(records.length > 0) {
 				article = '\
 					<section>\
-	                    <img src="'+ records[0].picture +'" alt="" />\
-	                    <h1>'+ records[0].title +'</h1>\
-	                    <p>'+ records[0].text +'</p>\
+	                    <img src="'+ self.safeAttr(records[0].picture) +'" alt="" />\
+	                    <h1>'+ self.safeText(records[0].title) +'</h1>\
+	                    <p>'+ self.safeText(records[0].text) +'</p>\
 	                </section>\
                 ';
 			}

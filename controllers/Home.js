@@ -41,8 +41,10 @@ module.exports = BaseController.extend({
 						var record = records[i];
 						tweetArticles += '\
 							<div class="item">\
-	                            <img src="' + record.picture + '" />\
-	                            <a href="/tweet/' + record.ID + '">' + record.title + '</a>\
+								<a href="/tweet/' + self.safeAttr(record.ID) + '">\
+		                            <img src="' + self.safeAttr(record.picture) + '" />\
+		                            <span>' + self.safeText(record.title) + '</span>\
+	                            </a>\
 	                        </div>\
 						';
 					}

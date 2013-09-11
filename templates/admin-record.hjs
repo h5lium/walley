@@ -21,6 +21,8 @@
 $(function() {
 	var $select = $('select[name="type"]'),
 		type = $select.attr('data-value');
-	$select.find('option[value="'+ type +'"]')[0].selected = true;
+	if (type) {
+		$select.find('option[value="'+ type +'"]')[0].selected = true;
+	}
 });
 </script>

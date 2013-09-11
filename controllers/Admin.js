@@ -47,6 +47,7 @@ module.exports = BaseController.extend({
 		);
 	},
 	list: function(callback) {
+		var self = this;
 		model.getlist(function(err, records) {
 			var markup = '<table>';
 			markup += '\
@@ -60,12 +61,12 @@ module.exports = BaseController.extend({
 			for(var i=0; record = records[i]; i++) {
 				markup += '\
 				<tr>\
-					<td>' + record.type + '</td>\
-					<td>' + record.title + '</td>\
-					<td><img class="list-picture" src="' + record.picture + '" /></td>\
+					<td>' + self.safeText(record.type) + '</td>\
+					<td>' + self.safeText(record.title) + '</td>\
+					<td><img class="list-picture" src="' + self.safeAttr(record.picture) + '" /></td>\
 					<td>\
-						<a href="/admin?action=delete&id=' + record.ID + '">delete</a>&nbsp;&nbsp;\
-						<a href="/admin?action=edit&id=' + record.ID + '">edit</a>\
+						<a href="/admin?action=delete&id=' + self.safeAttr(record.ID) + '">delete</a>&nbsp;&nbsp;\
+						<a href="/admin?action=edit&id=' + self.safeAttr(record.ID) + '">edit</a>\
 					</td>\
 				</tr>\
 			';
@@ -86,13 +87,13 @@ module.exports = BaseController.extend({
 					if(records.length > 0) {
 						var record = records[0];
 						res.render('admin-record', {
-							ID: record.ID,
-							text: record.text,
-							title: record.title,
-							type: record.type,
+							ID: self.safeAttr(record.ID),
+							text: self.safeAttr(record.text),
+							title: self.safeAttr(record.title),
+							type: self.safeAttr(record.type),
 							typeTags: typeTags,
-							picture: record.picture,
-							pictureTag: record.picture != '' ? '<img class="list-picture" src="' + record.picture + '" />' : ''
+							picture: self.safeAttr(record.picture),
+							pictureTag: record.picture != '' ? '<img class="list-picture" src="' + self.safeAttr(record.picture) + '" />' : ''
 						}, function(err, html) {
 							callback(html);
 						});
