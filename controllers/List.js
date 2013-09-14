@@ -1,18 +1,18 @@
 var BaseController = require("./Base"),
 	View = require("../views/Base"),
 	model = new (require("../models/ContentModel")),
-	_ = require('underscore');
+	_ = global._;
 
 module.exports = BaseController.extend({ 
 	content: null,
 	run: function(query, req, res, next) {
 		model.setDB(req.db);
 		var menuMarkup = _.reduce(global.config.types, function(memo, type) {
-        	if (type.name === 'home') {
-        		return memo + '<li><a href="/">'+ type.title +'</a></li>';
-        	}
-        	return memo + '<li><a href="/'+ (type.plural || type.name) +'">'+ type.title +'</a></li>';
-        }, '');
+			if (type.name === 'home') {
+				return memo + '<li><a href="/">'+ type.title +'</a></li>';
+			}
+			return memo + '<li><a href="/'+ (type.plural || type.name) +'">'+ type.title +'</a></li>';
+		}, '');
 		
 		var self = this;
 		self.getContent(query, function(innerMarkup) {
@@ -36,16 +36,21 @@ module.exports = BaseController.extend({
 					var record = records[i];
 					blogArticles += '\
 						<section class="item">\
-                            <img src="' + self.safeAttr(record.picture) + '" alt="" />\
-                            <h2>' + self.safeText(record.title) + '</h2>\
-                            <p>' + self.safeText(record.text) + '</p>\
-                            <br class="clear" />\
+							<img src="' + record.picture + '" alt="" />\
+							<a href="/'+ record.type +'/'+ record.ID +'">\
+								<h2>' + self.safeText(record.title) + '</h2>\
+							</a>\
+							<p>' + self.safeText(record.text) + '</p>\
+							<time>' + _.getDateStr(record.date) + '</time>\
+							<br class="clear" />\
 							<hr />\
-                        </section>\
+						</section>\
 					';
 				}
 			}
 			callback(blogArticles);
-		}, query);
+		}, query, {
+			sort: [['date', -1]]
+		});
 	}
 });

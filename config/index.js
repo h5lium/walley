@@ -1,26 +1,25 @@
 
 var _ = require('underscore');
 
-var config = {
-	local: {
-		mode: 'local',
+module.exports = function(mode) {
+	var config = mode !== 'test' ?
+	require('./private/'+ mode +'.mode.js') : {
+		mode: 'test',
 		port: 3000,
 		mongo: {
 			host: '127.0.0.1',
 			port: 27017,
-			dbname: 'walley'
+			dbname: 'walley-test'
 		},
 		admin: {
 			username: 'admin',
 			password: 'admin'
 		},
-		secret: 'abc'
-	},
-	bae: require('./private/bae.conf.js')
-}
-
-module.exports = function(mode) {
-	return _.extend(config[mode || process.argv[2] || 'local'], {
-		types: require('./types.conf.js')
+		secret: 'abc',
+		tmpDir: __dirname + '/../public/tmp'
+	};
+	
+	return _.extend(config, {
+		types: require('./ctn-types.js')
 	});
 }

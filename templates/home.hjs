@@ -4,13 +4,13 @@
     <div class="teaser">
         <div class="content">
             <img src="/images/home-teaser-image.jpg" alt="" class="home-teaser-image" />
-            <h2>{{bannerTitle}}</h2>
-            <p>{{bannerText}}</p>
+            <h2>{{title}}</h2>
+            <p>{{text}}</p>
             <div class="home-teaser-icons">
-                <a href="#"><img src="/images/home-teaser-icon1.png" alt=""/></a>
-                <a href="#"><img src="/images/home-teaser-icon2.png" alt=""/></a>
-                <a href="#"><img src="/images/home-teaser-icon3.png" alt=""/></a>
-                <a href="#"><img src="/images/home-teaser-icon4.png" alt=""/></a>
+                <a href="#"><img src="/images/home-teaser-icon1.png" /></a>
+                <a href="#"><img src="/images/home-teaser-icon2.png" /></a>
+                <a href="#"><img src="/images/home-teaser-icon3.png" /></a>
+                <a href="#"><img src="/images/home-teaser-icon4.png" /></a>
                 <br class="clear" />
             </div>
         </div>

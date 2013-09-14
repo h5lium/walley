@@ -1,7 +1,7 @@
 var BaseController = require("./Base"),
 	View = require("../views/Base"),
 	model = new (require("../models/ContentModel")),
-	_ = require('underscore');
+	_ = global._;
 
 module.exports = BaseController.extend({ 
 	content: null,
@@ -34,13 +34,16 @@ module.exports = BaseController.extend({
 			if(records.length > 0) {
 				article = '\
 					<section>\
-	                    <img src="'+ self.safeAttr(records[0].picture) +'" alt="" />\
+	                    <img src="'+ records[0].picture +'" alt="" />\
 	                    <h1>'+ self.safeText(records[0].title) +'</h1>\
 	                    <p>'+ self.safeText(records[0].text) +'</p>\
+	                    <time>' + _.getDateStr(records[0].date) + '</time>\
 	                </section>\
                 ';
 			}
 			callback(article);
-		}, query);
+		}, query, {
+			sort: [['date', -1]]
+		});
 	}
 });

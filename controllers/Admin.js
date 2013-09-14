@@ -3,7 +3,8 @@ var BaseController = require("./Base"),
 	model = new (require("../models/ContentModel")),
 	crypto = require("crypto"),
 	fs = require("fs"),
-	_ = require('underscore');
+	path = require('path'),
+	_ = global._;
 
 module.exports = BaseController.extend({
 	username: global.config.admin.username,
@@ -114,6 +115,7 @@ module.exports = BaseController.extend({
 			}
 		}
 		if(req.body && req.body.formsubmitted && req.body.formsubmitted === 'yes') {
+			var action = req.body.ID ? 'update' : 'insert';
 			var data = {
 				title: req.body.title,
 				text: req.body.text,
@@ -121,7 +123,11 @@ module.exports = BaseController.extend({
 				picture: this.handleFileUpload(req),
 				ID: req.body.ID
 			}
-			model[req.body.ID != '' ? 'update' : 'insert'](data, function(err, objects) {
+			
+			if (action === 'insert') {
+				data.date = new Date().toJSON();
+			}
+			model[action](data, function(err, objects) {
 				returnTheForm();
 			});
 		} else {
@@ -136,15 +142,19 @@ module.exports = BaseController.extend({
 		}
 	},
 	handleFileUpload: function(req) {
-		if(!req.files || !req.files.picture || !req.files.picture.name) {
+		if(! req.files || ! req.files.picture || ! req.files.picture.path) {
 			return req.body.currentPicture || '';
 		}
-		var data = fs.readFileSync(req.files.picture.path);
-		var fileName = req.files.picture.name;
+		var picture = req.files.picture;
+		if (! picture.size) {
+			fs.unlink(picture.path, function() {});
+			return req.body.currentPicture || '';
+		}
+		var fileName = picture.name;
+		var ext = fileName.substr(fileName.lastIndexOf('.') + 1);
 		var uid = crypto.randomBytes(10).toString('hex');
-		var dir = __dirname + "/../public/uploads/" + uid;
-		fs.mkdirSync(dir, '0777');
-		fs.writeFileSync(dir + "/" + fileName, data);
-		return '/uploads/' + uid + "/" + fileName;
+		var tarName = uid + '.' + ext;
+		fs.renameSync(picture.path, __dirname +'/../public/uploads/'+ tarName);
+		return '/uploads/' + tarName;
 	}
 });

@@ -1,13 +1,9 @@
 
-/**
- * Module dependencies.
- */
 var http = require('http'),
 	express = require('express'),
 	app = express(),
-	_ = require('underscore'), 
+	_ = global._ = require('./lib/mylib')(require('underscore')),
 	config = global.config = require('./config')('local'),
-	//config = global.config = require('./config')('bae'),
 	dbinit = require('./lib/dbinit');
 var Admin = require('./controllers/Admin'),
 	Home = require('./controllers/Home'),
@@ -18,26 +14,20 @@ var Admin = require('./controllers/Admin'),
 app.set('view engine', 'hjs');
 app.set('views', __dirname + '/templates');
 app.use(express.favicon());
-//app.use(express.logger('dev'));	// problem on bae
-app.use(express.bodyParser());
+//app.use(express.logger('dev'));
+app.use(express.bodyParser({ uploadDir: config.tmpDir }));
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({
-	secret: config.secret
-}));
+app.use(express.session({ secret: config.secret }));
 app.use(app.router);
-app.use(require('less-middleware')({
-	src: __dirname + '/public'
-}));
+app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(__dirname + '/public'));
-app.use(express.errorHandler({
-	dumpExceptions: true, showStack: true
-}));
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 
 dbinit(config.mongo, function(err, db) {
 	if (err) {
-		db.close();
+		db && db.close();
 		console.error('Sorry, there is a problem with mongo db server.');
 		return;
 	}

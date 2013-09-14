@@ -1,7 +1,7 @@
 var BaseController = require("./Base"),
 	View = require("../views/Base"),
 	model = new (require("../models/ContentModel")),
-	_ = require('underscore');
+	_ = global._;
 
 module.exports = BaseController.extend({ 
 	content: null,
@@ -30,8 +30,8 @@ module.exports = BaseController.extend({
 		homeData = {};
 		model.getlist(function(err, records) {
 			if(records.length > 0) {
-				homeData.bannerTitle = records[0].title;
-				homeData.bannerText = records[0].text;
+				homeData.title = records[0].title;
+				homeData.text = records[0].text;
 			}
 			model.getlist(function(err, records) {
 				var tweetArticles = '';
@@ -51,7 +51,9 @@ module.exports = BaseController.extend({
 				}
 				homeData.tweetArticles = tweetArticles;
 				callback(homeData);
-			}, { type: 'tweet' });
+			}, { type: 'tweet' }, {
+				sort: [['date', -1]]
+			});
 		}, { type: 'home' });
 	}
 });
