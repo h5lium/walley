@@ -61,16 +61,16 @@ module.exports = BaseController.extend({
 			';
 			for(var i=0; record = records[i]; i++) {
 				markup += '\
-				<tr>\
-					<td>' + self.safeText(record.type) + '</td>\
-					<td>' + self.safeText(record.title) + '</td>\
-					<td><img class="list-picture" src="' + self.safeAttr(record.picture) + '" /></td>\
-					<td>\
-						<a href="/admin?action=delete&id=' + self.safeAttr(record.ID) + '">delete</a>&nbsp;&nbsp;\
-						<a href="/admin?action=edit&id=' + self.safeAttr(record.ID) + '">edit</a>\
-					</td>\
-				</tr>\
-			';
+					<tr>\
+						<td>' + self.safeText(record.type) + '</td>\
+						<td>' + self.safeText(record.title) + '</td>\
+						<td><img class="list-picture" src="' + self.safeAttr(record.picture) + '" /></td>\
+						<td>\
+							<a href="/admin?action=delete&id=' + self.safeAttr(record.ID) + '">delete</a>&nbsp;&nbsp;\
+							<a href="/admin?action=edit&id=' + self.safeAttr(record.ID) + '">edit</a>\
+						</td>\
+					</tr>\
+				';
 			}
 			markup += '</table>';
 			callback(markup);
@@ -94,7 +94,8 @@ module.exports = BaseController.extend({
 							type: self.safeAttr(record.type),
 							typeTags: typeTags,
 							picture: self.safeAttr(record.picture),
-							pictureTag: record.picture != '' ? '<img class="list-picture" src="' + self.safeAttr(record.picture) + '" />' : ''
+							pictureTag: record.picture != '' ?
+								'<img class="list-picture" src="' + self.safeAttr(record.picture) + '" />' : ''
 						}, function(err, html) {
 							callback(html);
 						});
@@ -125,7 +126,11 @@ module.exports = BaseController.extend({
 			}
 			
 			if (action === 'insert') {
-				data.date = new Date().toJSON();
+				data.date = (function(d) {
+					var t = 8;
+					var n = d.getTimezoneOffset();
+					return new Date(d.getTime() + (t - n) * 3600000).toJSON();
+				})(new Date());
 			}
 			model[action](data, function(err, objects) {
 				returnTheForm();
